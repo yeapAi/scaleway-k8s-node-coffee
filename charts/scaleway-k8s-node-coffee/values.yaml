@@ -35,7 +35,7 @@ securityContext: {}
 config: {}
 
 ## Secrets
-secrets:
+secrets: {}
   ## Specify values of your scaleway configuration
   accessKey: <YOUR-ACCESS-KEY>
   secretKey: <YOUR-SECRET-KEY>
