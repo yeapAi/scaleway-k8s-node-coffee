@@ -35,12 +35,12 @@ securityContext: {}
 config: {}
 
 ## Secrets
-secrets: {}
+secrets:
   ## Specify values of your scaleway configuration
-  # accessKey: <YOUR-ACCESS-KEY>
-  # secretKey: <YOUR-SECRET-KEY>
-  # defaultZone: <YOUR-DEFAULT-ZONE>
-  # defaultRegion: <YOUR-DEFAULT-REGION>
+  accessKey: <YOUR-ACCESS-KEY>
+  secretKey: <YOUR-SECRET-KEY>
+  defaultZone: <YOUR-DEFAULT-ZONE>
+  defaultRegion: <YOUR-DEFAULT-REGION>
 
   ## Use an existing secret
   # existingSecret: ""
