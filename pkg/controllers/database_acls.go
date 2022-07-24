@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	rdb "github.com/scaleway/scaleway-sdk-go/api/rdb/v1"
 	"github.com/scaleway/scaleway-sdk-go/scw"
@@ -66,10 +68,22 @@ func (c *NodeController) syncDatabaseACLs(nodeName string) error {
 
 		var rule *rdb.ACLRule
 
+		nowUnix := time.Now()
+		var unixExpiration int64
 		for _, acl := range acls.Rules {
-			if acl.Description == nodeName {
+			_, unixExpiration = extractDescription(acl.Description)
+			if (unixExpiration > 0 && nowUnix.After(time.Unix(unixExpiration, 0))) {
+				_, err := dbAPI.DeleteInstanceACLRules(&rdb.DeleteInstanceACLRulesRequest{
+					Region:     dbInstance.Region,
+					ACLRuleIPs: []string{acl.IP.String()},
+					InstanceID: dbInstance.ID,
+				})
+				if err != nil {
+					klog.Errorf("could not delete acl rule for node %s on db %s: %v", nodeName, dbInstance.ID, err)
+					retryOnError = true
+				}
+			} else if strings.HasPrefix(acl.Description, nodeName) {
 				rule = acl
-				break
 			}
 		}
 
@@ -160,4 +174,30 @@ func getRegionalizedID(r string) (string, string, error) {
 	default:
 		return "", "", fmt.Errorf("couldn't parse ID %s", r)
 	}
+}
+
+func addDescriptionTTL(descr string, ttl int) (string) {
+	if (ttl > 0) {
+		ttlValue := time.Now().Add(time.Second * time.Duration(ttl))
+		descr = fmt.Sprintf("%s|%v", descr, ttlValue.Unix())
+	}
+	return descr
+}
+
+func extractDescription(descr string) (string, int64) {
+	var err error
+	var unixExpiration int64
+	nodeName := descr
+	unixExpiration = 0
+
+	split := strings.LastIndex(descr, "|")
+	if (split > 0) {
+		nodeName = descr[:split]
+		unixExpiration, err = strconv.ParseInt(descr[split+1:], 10, 64)
+		if err != nil {
+			klog.Errorf("could not parse the desired number for acl database tll %s: %v", descr[split+1:], err)
+		}
+	}
+
+	return nodeName, unixExpiration
 }

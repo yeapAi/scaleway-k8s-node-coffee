@@ -22,6 +22,7 @@ const (
 	ReverseIPDomainEnv      = "REVERSE_IP_DOMAIN"
 	DatabaseIDsEnv          = "DATABASE_IDS"
 	ReservedIPsPoolEnv      = "RESERVED_IPS_POOL"
+	AclDatabaseTTLEnv       = "DATABASE_ACL_TTL"
 	SecurityGroupIDs        = "SECURITY_GROUP_IDS"
 	NumberRetries           = "NUMBER_RETRIES"
 	NodesIPSource           = "NODES_IP_SOURCE"
@@ -82,6 +83,7 @@ func NewNodeController(clientset *kubernetes.Clientset) (*NodeController, error)
 		queue:         queue,
 		scwClient:     scwClient,
 		numberRetries: defaultNumberRetries,
+		aclDatabaseTTL: defaultAclDatabaseTTL,
 		clientset:     clientset,
 	}
 
@@ -108,6 +110,15 @@ func NewNodeController(clientset *kubernetes.Clientset) (*NodeController, error)
 		if err != nil {
 			klog.Errorf("could not parse the desired number of retries %s: %v", os.Getenv(NumberRetries), err)
 			controller.numberRetries = defaultNumberRetries
+		}
+	}
+
+	if os.Getenv(AclDatabaseTTLEnv) != "" {
+		AclDatabaseTTLValue, err := strconv.Atoi(os.Getenv(AclDatabaseTTLEnv))
+		controller.aclDatabaseTTL = AclDatabaseTTLValue
+		if err != nil {
+			klog.Errorf("could not parse the desired number for acl database tll %s: %v", os.Getenv(AclDatabaseTTLEnv), err)
+			controller.aclDatabaseTTL = defaultAclDatabaseTTL
 		}
 	}
 

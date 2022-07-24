@@ -11,6 +11,7 @@ import (
 
 const (
 	defaultNumberRetries = 30
+	defaultAclDatabaseTTL = -1
 )
 
 type NodeController struct {
@@ -27,6 +28,8 @@ type NodeController struct {
 	databaseIDs      []string
 	reservedIPs      []string
 	securityGroupIDs []string
+
+	aclDatabaseTTL   int
 
 	numberRetries int
 }

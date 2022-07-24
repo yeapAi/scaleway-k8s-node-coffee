@@ -34,6 +34,8 @@ will update the ACL of the databse with ID `11111111-1111-1111-2111-111111111111
 
 If your database is in a different project than the cluster nodes, please set the environment variable `NODES_IP_SOURCE` to `kubernetes`.
 
+Use `DATABASE_ACL_TTL` to set a ttl on database acl (default -1 deactivated, value is in second).
+
 ### Security Group
 
 This feature allows you to update multiple security groups with:
