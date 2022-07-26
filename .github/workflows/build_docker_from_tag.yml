@@ -1,0 +1,33 @@
+name: "[MANUAL] - Build docker from specific tag"
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Repository tag to build'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - uses: mukunku/tag-exists-action@v1.0.0
+      id: checkTag
+      with: 
+        tag: ${{ github.event.inputs.tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+    - name: Checkout
+      if: steps.checkTag.outputs.exists
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.tag }}
+    - name: Build and push Docker image
+      if: steps.checkTag.outputs.exists
+      uses: matootie/github-docker@v3.1.0
+      with:
+        accessToken: ${{ secrets.PAT }}
+        imageName: scaleway-k8s-node-coffee
+        tag: ${{ github.event.inputs.tag }}
+        containerRegistry: true
