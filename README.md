@@ -16,6 +16,8 @@ It is controlled by the `RESERVED_IPS_POOL` environment variable, it's a list a 
 RESERVED_IPS_POOL=51.15.15.15,51.15.15.32
 ```
 
+A label `reserved-ip: true` will be added to the nodes with a reserved IP.
+
 ### IP reverse
 
 This feature allows to set the reverse IP of the reserved IP to a custom one. It will only work if a reserved IP is already set on the node (to use with the Reserved IP feature).
@@ -29,6 +31,8 @@ DATABASE_IDS=11111111-1111-1111-2111-111111111111,nl-ams-1/11111111-1111-1111-21
 ```
 
 will update the ACL of the databse with ID `11111111-1111-1111-2111-111111111111` in the region specified by the environment variable `SCW_DEFAULT_REGION` and the database `11111111-1111-1111-2111-111111111112` in the `nl-ams` region.
+
+If your database is in a different project than the cluster nodes, please set the environment variable `NODES_IP_SOURCE` to `kubernetes`.
 
 ### Security Group
 

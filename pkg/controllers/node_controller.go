@@ -19,11 +19,14 @@ import (
 )
 
 const (
-	ReverseIPDomainEnv = "REVERSE_IP_DOMAIN"
-	DatabaseIDsEnv     = "DATABASE_IDS"
-	ReservedIPsPoolEnv = "RESERVED_IPS_POOL"
-	SecurityGroupIDs   = "SECURITY_GROUP_IDS"
-	NumberRetries      = "NUMBER_RETRIES"
+	ReverseIPDomainEnv      = "REVERSE_IP_DOMAIN"
+	DatabaseIDsEnv          = "DATABASE_IDS"
+	ReservedIPsPoolEnv      = "RESERVED_IPS_POOL"
+	SecurityGroupIDs        = "SECURITY_GROUP_IDS"
+	NumberRetries           = "NUMBER_RETRIES"
+	NodesIPSource           = "NODES_IP_SOURCE"
+	NodesIPSourceKubernetes = "kubernetes"
+	NodeLabelReservedIP     = "reserved-ip"
 )
 
 func NewNodeController(clientset *kubernetes.Clientset) (*NodeController, error) {
@@ -79,6 +82,7 @@ func NewNodeController(clientset *kubernetes.Clientset) (*NodeController, error)
 		queue:         queue,
 		scwClient:     scwClient,
 		numberRetries: defaultNumberRetries,
+		clientset:     clientset,
 	}
 
 	// TODO handle validation here ?
