@@ -78,13 +78,13 @@ func NewNodeController(clientset *kubernetes.Clientset) (*NodeController, error)
 	}
 
 	controller := &NodeController{
-		indexer:       indexer,
-		informer:      informer,
-		queue:         queue,
-		scwClient:     scwClient,
-		numberRetries: defaultNumberRetries,
+		indexer:        indexer,
+		informer:       informer,
+		queue:          queue,
+		scwClient:      scwClient,
+		numberRetries:  defaultNumberRetries,
 		aclDatabaseTTL: defaultAclDatabaseTTL,
-		clientset:     clientset,
+		clientset:      clientset,
 	}
 
 	// TODO handle validation here ?

@@ -72,7 +72,7 @@ func (c *NodeController) syncDatabaseACLs(nodeName string) error {
 		var unixExpiration int64
 		for _, acl := range acls.Rules {
 			_, unixExpiration = extractDescription(acl.Description)
-			if (unixExpiration > 0 && nowUnix.After(time.Unix(unixExpiration, 0))) {
+			if unixExpiration > 0 && nowUnix.After(time.Unix(unixExpiration, 0)) {
 				_, err := dbAPI.DeleteInstanceACLRules(&rdb.DeleteInstanceACLRulesRequest{
 					Region:     dbInstance.Region,
 					ACLRuleIPs: []string{acl.IP.String()},
@@ -145,7 +145,7 @@ func (c *NodeController) syncDatabaseACLs(nodeName string) error {
 				Rules: []*rdb.ACLRuleRequest{
 					{
 						IP:          scw.IPNet{IPNet: nodeIP},
-						Description: nodeName,
+						Description: addDescriptionTTL(nodeName, c.aclDatabaseTTL),
 					},
 				},
 			})
@@ -176,8 +176,8 @@ func getRegionalizedID(r string) (string, string, error) {
 	}
 }
 
-func addDescriptionTTL(descr string, ttl int) (string) {
-	if (ttl > 0) {
+func addDescriptionTTL(descr string, ttl int) string {
+	if ttl > 0 {
 		ttlValue := time.Now().Add(time.Second * time.Duration(ttl))
 		descr = fmt.Sprintf("%s|%v", descr, ttlValue.Unix())
 	}
@@ -191,7 +191,7 @@ func extractDescription(descr string) (string, int64) {
 	unixExpiration = 0
 
 	split := strings.LastIndex(descr, "|")
-	if (split > 0) {
+	if split > 0 {
 		nodeName = descr[:split]
 		unixExpiration, err = strconv.ParseInt(descr[split+1:], 10, 64)
 		if err != nil {
