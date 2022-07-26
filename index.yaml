@@ -2,10 +2,10 @@ apiVersion: v1
 entries:
   scaleway-k8s-node-coffee:
   - apiVersion: v2
-    appVersion: 0.1.1
-    created: "2021-06-28T15:34:45.832646432Z"
+    appVersion: 0.2.0
+    created: "2022-07-26T15:02:31.673702495Z"
     description: Helm chart for The Coffee Machine for Scaleway Kubernetes Nodes
-    digest: bfce9ed9b052f26b3bb569aa98cf50a31f0dca7ef9ebfb54c843b3c0b6d3c9d8
+    digest: 5aff353ab248256742177f637e312b3ea5acb5edd8cff281369a979cd8aff804
     keywords:
     - scaleway
     - nodes
@@ -16,4 +16,4 @@ entries:
     urls:
     - https://yeapAi.github.io/scaleway-k8s-node-coffee/scaleway-k8s-node-coffee-0.1.0.tgz
     version: 0.1.0
-generated: "2021-06-28T15:34:45.831961027Z"
+generated: "2022-07-26T15:02:31.673063603Z"
