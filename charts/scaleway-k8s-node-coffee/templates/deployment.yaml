@@ -37,7 +37,7 @@ spec:
               protocol: TCP
           env:
             - name: DATABASE_ACL_TTL
-              value: {{ .Values.ttl }}
+              value: {{ .Values.ttl | quote }}
             - name: CONFIGMAP_NAMESPACE
               valueFrom:
                 fieldRef:
