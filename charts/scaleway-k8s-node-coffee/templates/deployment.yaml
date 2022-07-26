@@ -36,6 +36,8 @@ spec:
               containerPort: 80
               protocol: TCP
           env:
+            - name: DATABASE_ACL_TTL
+              value: {{ .Values.ttl }}
             - name: CONFIGMAP_NAMESPACE
               valueFrom:
                 fieldRef:
