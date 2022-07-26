@@ -17,6 +17,8 @@ jobs:
           sudo chmod +x /usr/local/bin/yq
       - name: Change appVersion
         run:  yq e -i '.appVersion="${{ steps.getversion.outputs.tag }}"' charts/scaleway-k8s-node-coffee/Chart.yaml
+      - name: Change version
+        run:  yq e -i '.version="${{ steps.getversion.outputs.tag }}"' charts/scaleway-k8s-node-coffee/Chart.yaml
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
